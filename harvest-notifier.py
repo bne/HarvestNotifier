@@ -32,6 +32,7 @@ class HarvestNotifier:
                 
                 for task in project['tasks']:
                     t = gtk.MenuItem(task['name'])
+                    t.connect('activate', self.task_cb, self.menu)
                     task_menu.append(t)
                 
                 p.set_submenu(task_menu)
@@ -53,7 +54,7 @@ class HarvestNotifier:
     
         gtk.main()
         
-    def execute_cb(self, widget, event, data = None):
+    def task_cb(self, widget, event, data = None):
         window = gtk.Window(gtk.WINDOW_TOPLEVEL)
         window.set_border_width(10)
     
