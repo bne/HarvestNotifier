@@ -27,7 +27,14 @@ class HarvestNotifier:
             project_menu.append(client_item)
             
             for project in projects:
+                task_menu = gtk.Menu()
                 p = gtk.MenuItem(project['name'])
+                
+                for task in project['tasks']:
+                    t = gtk.MenuItem(task['name'])
+                    task_menu.append(t)
+                
+                p.set_submenu(task_menu)
                 project_menu.append(p)
             sep = gtk.SeparatorMenuItem()
             project_menu.append(sep)
