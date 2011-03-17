@@ -62,15 +62,29 @@ class HarvestNotifier:
     def task_cb(self, widget, event, data = None):
         
         if self.timer_running:
+            # TODO: Needs to stop the current timer, and start the new one
+            
             pass
         else:
-            # stop timer button
-            stop_timer = gtk.MenuItem('Stop Timer')
-            self.menu.prepend(stop_timer)
-            
+           
+            # button showing what timer we're running
             timer = gtk.MenuItem(data['project']['name'] + " - " + data['task']['name'])
+            timer.connect('activate', self.timer_click_cb, self.menu, data)
             self.menu.prepend(timer)
             self.timer_running = True
+            
+    def timer_click_cb(self, widget, event, data = None):
+        """ Event triggered if a timer is running and someone clicks on the timer """
+        
+        if not self.timer_running:
+            # we shouldn't get here, but just in case
+            return
+        
+        # TODO: actually stop the timer
+        
+        # remove the timer button
+        self.menu.remove(widget)
+        self.timer_running = False
             
         
     def quit_cb(self, widget, data = None):
