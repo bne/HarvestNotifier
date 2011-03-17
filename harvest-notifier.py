@@ -8,6 +8,8 @@ import scratch
 
 class HarvestNotifier:
     
+    timer_running = False
+    
     def __init__(self):
         
         self.harvest = Harvest(scratch.url, scratch.username, scratch.password)
@@ -18,6 +20,9 @@ class HarvestNotifier:
         self.statusIcon.set_tooltip("Hello World")
     
         self.menu = gtk.Menu()
+        
+        sep = gtk.SeparatorMenuItem()
+        self.menu.append(sep)
         
         project_menu = gtk.Menu()
         
@@ -32,7 +37,7 @@ class HarvestNotifier:
                 
                 for task in project['tasks']:
                     t = gtk.MenuItem(task['name'])
-                    t.connect('activate', self.task_cb, self.menu)
+                    t.connect('activate', self.task_cb, self.menu, {"project": project, "task": task})
                     task_menu.append(t)
                 
                 p.set_submenu(task_menu)
@@ -55,15 +60,18 @@ class HarvestNotifier:
         gtk.main()
         
     def task_cb(self, widget, event, data = None):
-        window = gtk.Window(gtk.WINDOW_TOPLEVEL)
-        window.set_border_width(10)
-    
-        button = gtk.Button("Hello World")
-        button.connect_object("clicked", gtk.Widget.destroy, window)
-    
-        window.add(button)
-        button.show()
-        window.show()
+        
+        if self.timer_running:
+            pass
+        else:
+            # stop timer button
+            stop_timer = gtk.MenuItem('Stop Timer')
+            self.menu.prepend(stop_timer)
+            
+            timer = gtk.MenuItem(data['project']['name'] + " - " + data['task']['name'])
+            self.menu.prepend(timer)
+            self.timer_running = True
+            
         
     def quit_cb(self, widget, data = None):
         gtk.main_quit()
