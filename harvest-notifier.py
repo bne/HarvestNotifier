@@ -65,7 +65,7 @@ class HarvestNotifier:
         
         if self.timer_running:
 
-            self.menu.remove(self.menu.children()[0])
+            self.menu.remove(self.menu.get_children()[0])
            
         self.harvest.timer_toggle(data['project'], data['task'])
         
