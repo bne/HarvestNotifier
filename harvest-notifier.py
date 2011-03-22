@@ -9,6 +9,8 @@ import scratch
 class HarvestNotifier:
     
     timer_running = False
+    current_project = None
+    current_task = None
     
     def __init__(self):
         
@@ -63,7 +65,7 @@ class HarvestNotifier:
         
         if self.timer_running:
 
-            self.menu.remove(self.menu.children()[0])
+            self.menu.remove(self.menu.get_children()[0])
            
         self.harvest.timer_toggle(data['project'], data['task'])
         
@@ -72,6 +74,9 @@ class HarvestNotifier:
         timer.connect('activate', self.timer_click_cb, self.menu, data)
         self.menu.prepend(timer)
         self.timer_running = True
+
+        self.current_project = data['project']
+        self.current_task = data['task']
             
     def timer_click_cb(self, widget, event, data = None):
         """ Event triggered if a timer is running and someone clicks on the timer """
@@ -85,9 +90,16 @@ class HarvestNotifier:
         # remove the timer button
         self.menu.remove(widget)
         self.timer_running = False
+
+        self.current_project = None
+        self.current_task = None
             
         
     def quit_cb(self, widget, data = None):
+
+        if self.timer_running:
+            self.harvest.timer_toggle(self.current_project, self.current_task)
+
         gtk.main_quit()
         
     def popup_menu_cb(self, widget, button, time, data = None):
